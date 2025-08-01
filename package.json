@@ -8,7 +8,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@prisma/client": "^6.12.0",
     "bcrypt": "^6.0.0",
@@ -19,6 +18,15 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10",
-    "prisma": "^6.12.0"
-  }
+    "prisma": "^6.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlejoooE764/Login-NutriFit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlejoooE764/Login-NutriFit/issues"
+  },
+  "homepage": "https://github.com/AlejoooE764/Login-NutriFit#readme",
+  "description": ""
 }

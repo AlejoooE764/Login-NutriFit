@@ -33,7 +33,7 @@ exports.register = async (req, res) => {
       }
     });
 
-    res.status(200).json({ message: 'Usuario creado' })
+    res.status(200).json({ message: 'Usuario creado' });
   } catch (error) {
     console.error(error);
     res.status(500).send('Error al registrar usuario');
@@ -58,7 +58,6 @@ exports.login = async (req, res) => {
       return res.status(401).send('Contraseña incorrecta');
     }
 
-    // Guardamos en sesión si está habilitado
     req.session.userId = user.id;
     req.session.userName = user.name;
     req.session.userEmail = user.email;
@@ -91,9 +90,7 @@ exports.recuperarUsuario = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
       return res.status(404).send('No se encontró un usuario con ese correo');
@@ -107,7 +104,7 @@ exports.recuperarUsuario = async (req, res) => {
 };
 
 // -----------------------------
-// ENVÍO DE TOKEN POR CORREO
+// ENVÍO DE TOKEN POR CORREO + REDIRECCIÓN
 // -----------------------------
 exports.enviarTokenRecuperacion = async (req, res) => {
   const { email } = req.body;
@@ -125,13 +122,14 @@ exports.enviarTokenRecuperacion = async (req, res) => {
       where: { email },
       data: {
         resetToken: token,
-        resetTokenExpiry: new Date(Date.now() + 15 * 60 * 1000), // 15 minutos
+        resetTokenExpiry: new Date(Date.now() + 15 * 60 * 1000),
       },
     });
 
     await enviarTokenPorCorreo(email, token);
 
-    res.send('Se ha enviado un token a tu correo.');
+    // 🔁 Redirigir al formulario de recuperación
+    res.redirect('/resetear-contrasena.html');
   } catch (error) {
     console.error(error);
     res.status(500).send('Error al generar token');
@@ -149,7 +147,7 @@ exports.cambiarContrasena = async (req, res) => {
       where: {
         resetToken: token,
         resetTokenExpiry: {
-          gte: new Date(), // Verifica que no haya expirado
+          gte: new Date(),
         },
       },
     });
@@ -169,7 +167,7 @@ exports.cambiarContrasena = async (req, res) => {
       },
     });
 
-    // 🔴 Redirige a la página de confirmación
+    // ✅ Redirigir a página de confirmación
     res.redirect('/confirmacion-exitosa.html');
   } catch (error) {
     console.error(error);

@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware para interpretar datos de formularios (x-www-form-urlencoded)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 // Middleware para manejar sesiones
 app.use(session({
   secret: 'nutrifit-secret-key', // Clave secreta para firmar la cookie de sesión
@@ -24,18 +25,12 @@ app.use(session({
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Usamos las rutas de autenticación (login, register, logout, etc.)
-app.use('/api/auth',authRoutes);
+app.use('/api/auth', authRoutes);
 
-// Iniciamos el servidor
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
-
-//Definir login como pagina principal 
+// Redirigir al login como página principal
 app.get('/', (req, res) => {
   res.redirect('/login.html');
 });
-
 
 // Ruta para obtener los datos de la sesión
 app.get('/session', (req, res) => {
@@ -49,4 +44,14 @@ app.get('/session', (req, res) => {
     // Si no hay sesión activa, devolver un error
     res.json({ error: 'No estás logueado' });
   }
+});
+
+// ✅ Ruta para mostrar página de confirmación de contraseña cambiada
+app.get('/confirmacion-cambio', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'confirmacion-cambio.html'));
+});
+
+// Iniciamos el servidor
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
